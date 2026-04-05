@@ -1,10 +1,21 @@
-FROM n8nio/n8n:latest
-USER root
-RUN apt-get update && apt-get install -y ffmpeg yt-dlp
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-ENV N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
+FROM node:20-bookworm-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    python3 \
+    python3-pip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install yt-dlp --break-system-packages
+
+RUN npm install -g n8n
+
 ENV N8N_PORT=5678
-ENV N8N_PROTOCOL=https
-ENV NODE_ENV=production
-ENV WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
-USER node
+ENV N8N_HOST=0.0.0.0
+
+EXPOSE 5678
+
+CMD ["n8n", "start"]
