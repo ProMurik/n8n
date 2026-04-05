@@ -10,3 +10,34 @@ services:
       - 5432:5432
     tmpfs:
       - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=hackbook.duckdns.org
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=postgres
+      - DB_POSTGRESDB_PASSWORD=password
+      - DB_POSTGRESDB_DATABASE=n8n
+      # 🚀 Execute Command node-unu aktivləşdirən xətt (BUNU ƏLAVƏ ET!)
+      - N8N_ENABLE_EXECUTE_COMMAND=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
