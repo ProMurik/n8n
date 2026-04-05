@@ -15,7 +15,7 @@ RUN npm install -g n8n
 
 ENV N8N_PORT=5697
 ENV N8N_HOST=0.0.0.0
-
+ENV N8N_ENABLE_EXECUTE_COMMAND=true
 EXPOSE 5697
 
 CMD ["n8n", "start"]
