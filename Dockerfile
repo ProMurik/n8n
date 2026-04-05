@@ -13,7 +13,7 @@ RUN pip3 install yt-dlp --break-system-packages
 
 RUN npm install -g n8n
 
-ENV N8N_PORT=5678
+ENV N8N_PORT=5679
 ENV N8N_HOST=0.0.0.0
 
 EXPOSE 5678
